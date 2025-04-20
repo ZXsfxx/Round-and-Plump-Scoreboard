@@ -1,0 +1,28 @@
+<view class="calendar">
+  <view class="calendar-header">
+    <view class="month-switcher">
+      <view class="switch-btn" bindtap="prevMonth">
+        <text class="arrow">◀</text>
+      </view>
+      <view class="calendar-title">{{year}}年{{month}}月</view>
+      <view class="switch-btn" bindtap="nextMonth">
+        <text class="arrow">▶</text>
+      </view>
+    </view>
+  </view>
+  <view class="weekdays">
+    <view class="weekday" wx:for="{{['日', '一', '二', '三', '四', '五', '六']}}" wx:key="*this">{{item}}</view>
+  </view>
+  <view class="days">
+    <view 
+      wx:for="{{days}}" 
+      wx:key="index" 
+      class="day-cell {{!item.day ? 'empty' : ''}} {{item.hasScore ? 'has-score' : 'no-score'}}"
+      style="{{item.hasScore ? 'background-color: ' + item.color + '; opacity: ' + item.opacity + ';' : ''}}"
+      bindtap="onDayTap"
+      data-index="{{index}}"
+    >
+      {{item.day}}
+    </view>
+  </view>
+</view> 

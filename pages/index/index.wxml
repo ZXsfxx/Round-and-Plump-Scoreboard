@@ -1,0 +1,253 @@
+<view class="page-container">
+  <!-- 固定在顶部的区域 -->
+  <view class="fixed-header">
+    <view class="total-score-container">
+      <view class="score-container">
+        <text class="team-name">徐老师</text>
+        <view class="score-box total">
+          <text class="score">{{team1Score}}</text>
+        </view>
+      </view>
+      <text class="vs">VS</text>
+      <view class="score-container">
+        <text class="team-name">王老师</text>
+        <view class="score-box total">
+          <text class="score">{{team2Score}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="daily-scores-header">
+      <text class="header-text">每日比分</text>
+    </view>
+    
+    <view class="edit-buttons-container">
+      <button class="edit-button search {{isLoadingCalendar ? 'loading' : ''}}" bindtap="showCalendar">
+        <text class="button-text">{{isLoadingCalendar ? '加载中...' : '热力图！'}}</text>
+        <view class="button-loading" wx:if="{{isLoadingCalendar}}"></view>
+      </button>
+      <button class="edit-button note" bindtap="showNoteEditor">圆滚滚秘密基地！</button>
+    </view>
+  </view>
+  
+  <!-- 可滚动的日期比分区域 -->
+  <scroll-view id="scrollView" class="scrollable-content" scroll-y="true" enhanced="true" show-scrollbar="true" bounces="true" scroll-top="{{scrollTop}}">
+    <!-- 添加顶部空白确保第一个项目完全显示 -->
+    <view class="top-space"></view>
+    
+    <view class="daily-scores-list">
+      <block wx:if="{{dailyScores.length > 0}}">
+        <view class="daily-score-item {{item.highlight ? 'highlight' : ''}}" wx:for="{{dailyScores}}" wx:key="date" bindlongpress="showDeleteConfirm" data-date="{{item.date}}" data-id="{{item._id}}">
+          <text class="date-text">{{item.date}}</text>
+          <view class="daily-score-values">
+            <view class="score-box small" bindtap="showScorePicker" data-index="{{index}}" data-team="team1">
+              <text class="score">{{item.team1}}</text>
+            </view>
+            <text class="vs small">VS</text>
+            <view class="score-box small" bindtap="showScorePicker" data-index="{{index}}" data-team="team2">
+              <text class="score">{{item.team2}}</text>
+            </view>
+          </view>
+        </view>
+      </block>
+      <block wx:else>
+        <view class="empty-state">
+          <text class="empty-text">暂无日期比分，请点击"添加日期"按钮添加</text>
+        </view>
+      </block>
+    </view>
+    
+    <!-- 添加底部填充空间 -->
+    <view class="bottom-space"></view>
+  </scroll-view>
+
+  <!-- 添加浮动按钮 -->
+  <view class="fab-button {{isLoadingDate ? 'loading' : ''}}" bindtap="showDatePicker" data-mode="add">
+    <text class="fab-icon" wx:if="{{!isLoadingDate}}">+</text>
+    <view class="fab-loading" wx:if="{{isLoadingDate}}"></view>
+  </view>
+
+  <!-- 模态框和选择器 -->
+  <view class="picker-mask" wx:if="{{pickerVisible}}" bindtap="hidePicker"></view>
+  <view class="picker-container" wx:if="{{pickerVisible}}">
+    <picker-view class="picker" value="{{pickerValue}}" bindchange="{{editingIndex >= 0 ? 'onDailyScoreChange' : 'onPickerChange'}}">
+      <picker-view-column>
+        <view wx:for="{{pickerRange}}" wx:key="*this" class="picker-item">{{item}}</view>
+      </picker-view-column>
+    </picker-view>
+  </view>
+
+  <view class="date-picker-mask" wx:if="{{datePickerVisible}}" bindtap="hideDatePicker"></view>
+  <view class="date-picker-container" wx:if="{{datePickerVisible}}">
+    <view class="date-picker-title">{{editMode === 'add' ? '添加日期' : '搜索日期'}}</view>
+    <view class="date-picker-content">
+      <picker-view class="date-picker" value="{{dateValue}}" bindchange="onDatePickerChange">
+        <block wx:if="{{editMode === 'add'}}">
+          <picker-view-column>
+            <view wx:for="{{years}}" wx:key="*this" class="picker-item">{{item}}年</view>
+          </picker-view-column>
+          <picker-view-column>
+            <view wx:for="{{months}}" wx:key="*this" class="picker-item">{{item}}月</view>
+          </picker-view-column>
+          <picker-view-column>
+            <view wx:for="{{days}}" wx:key="*this" class="picker-item">{{item}}日</view>
+          </picker-view-column>
+        </block>
+        <block wx:else>
+          <picker-view-column>
+            <view wx:for="{{searchableYears}}" wx:key="*this" class="picker-item">{{item}}年</view>
+          </picker-view-column>
+          <picker-view-column>
+            <view wx:for="{{searchableMonths}}" wx:key="*this" class="picker-item">{{item}}月</view>
+          </picker-view-column>
+          <picker-view-column>
+            <view wx:for="{{searchableDays}}" wx:key="*this" class="picker-item">{{item}}日</view>
+          </picker-view-column>
+        </block>
+      </picker-view>
+    </view>
+    <view class="date-picker-buttons">
+      <button class="cancel-button" bindtap="hideDatePicker">取消</button>
+      <button class="confirm-button" bindtap="{{editMode === 'add' ? 'addDailyScore' : 'searchDate'}}">
+        {{editMode === 'add' ? '添加' : '搜索'}}
+      </button>
+    </view>
+  </view>
+
+  <!-- 日历热力图模态框 -->
+  <view class="calendar-modal-mask" wx:if="{{calendarVisible}}" bindtap="hideCalendar"></view>
+  <view class="calendar-modal" wx:if="{{calendarVisible}}" catchtap>
+    <calendar id="calendar" dailyScores="{{dailyScores}}" bind:daytap="onCalendarDayTap"></calendar>
+  </view>
+
+  <!-- 笔记编辑器 -->
+  <view class="note-editor-mask" wx:if="{{noteEditorVisible}}" bindtap="hideNoteEditor"></view>
+  <view class="note-editor-container" wx:if="{{noteEditorVisible}}" catchtap>
+    <view class="note-editor-header">
+      <text class="note-editor-title">圆圆滚滚组合的秘密基地！</text>
+      <view class="note-editor-close" catchtap="hideNoteEditor">×</view>
+    </view>
+
+    <!-- 笔记类型选择 -->
+    <view class="note-tabs">
+      <view class="note-tab {{activeNoteTab === 'all' ? 'active' : ''}}" bindtap="switchNoteTab" data-tab="all">全部</view>
+      <view class="note-tab {{activeNoteTab === 'text' ? 'active' : ''}}" bindtap="switchNoteTab" data-tab="text">文本</view>
+      <view class="note-tab {{activeNoteTab === 'photo' ? 'active' : ''}}" bindtap="switchNoteTab" data-tab="photo">照片</view>
+    </view>
+
+    <!-- 笔记列表 -->
+    <scroll-view class="notes-list" scroll-y wx:if="{{!isEditingNote}}">
+      <view wx:if="{{isLoadingNote}}" class="loading-container">
+        <view class="loading-spinner"></view>
+        <text class="loading-text">加载中...</text>
+        <view class="loading-progress"></view>
+      </view>
+      
+      <block wx:elif="{{notesList.length > 0}}">
+        <view class="note-card" 
+              wx:for="{{notesList}}" 
+              wx:key="id" 
+              bindtap="editNote" 
+              data-id="{{item.id}}"
+              bindlongpress="showDeleteNoteConfirm"
+              data-id="{{item.id}}">
+          <view class="note-card-content">
+            <view class="note-card-title">{{item.title || '无标题笔记'}}</view>
+            <!-- 显示笔记块，只显示第一张图片前的内容 -->
+            <block wx:for="{{item.blocks}}" 
+                   wx:key="index" 
+                   wx:for-item="block" 
+                   wx:for-index="blockIndex"
+                   wx:if="{{blockIndex <= item.firstImageIndex || (item.firstImageIndex === -1 && block.type === 'text')}}">
+              <text wx:if="{{block.type === 'text'}}" class="note-card-text">{{block.content}}</text>
+              <image wx:if="{{block.type === 'image'}}" 
+                     src="{{block.content}}" 
+                     mode="widthFix" 
+                     class="note-card-image"></image>
+            </block>
+          </view>
+          <view class="note-card-footer">
+            <text class="note-card-time">创建于：{{item.createTime}}</text>
+            <text class="note-card-time" wx:if="{{item.updateTime !== item.createTime}}">更新于：{{item.updateTime}}</text>
+          </view>
+        </view>
+      </block>
+      
+      <view wx:else class="empty-notes">
+        <text>暂无笔记，点击下方按钮创建</text>
+      </view>
+    </scroll-view>
+    
+    <!-- 添加笔记按钮（固定位置） -->
+    <view class="add-note-btn-fixed" bindtap="createNewNote" wx:if="{{!isEditingNote}}">
+      <text class="add-icon">+</text>
+    </view>
+
+    <!-- 笔记编辑区域 -->
+    <view class="note-edit-area" wx:if="{{isEditingNote}}">
+      <input class="note-title-input" 
+             value="{{currentNote.title}}" 
+             bindinput="onNoteTitleChange" 
+             placeholder="输入标题..."
+             maxlength="50" />
+             
+      <scroll-view class="note-blocks-container" scroll-y>
+        <block wx:for="{{currentNote.blocks}}" wx:key="index">
+          <!-- 文本块 -->
+          <view class="note-block" wx:if="{{item.type === 'text'}}">
+            <textarea class="note-text-block"
+                      value="{{item.content}}" 
+                      bindinput="onTextBlockChange"
+                      data-index="{{index}}"
+                      bindfocus="onTextBlockFocus"
+                      placeholder="{{index === 0 ? '在这里写下你的秘密...' : '继续写下去...'}}"
+                      maxlength="5000"
+                      auto-height></textarea>
+          </view>
+          
+          <!-- 图片块 -->
+          <view class="note-block" wx:if="{{item.type === 'image'}}">
+            <view class="image-block">
+              <image src="{{item.content}}" 
+                     mode="widthFix" 
+                     class="block-image"
+                     bindtap="previewImage"
+                     data-url="{{item.content}}"></image>
+              <view class="image-actions">
+                <view class="delete-image-btn" 
+                      catchtap="deleteBlock" 
+                      data-index="{{index}}">×</view>
+              </view>
+            </view>
+          </view>
+        </block>
+      </scroll-view>
+      
+      <!-- 底部工具栏 -->
+      <view class="note-edit-footer">
+        <view class="note-tools">
+          <view class="tool-btn" bindtap="chooseImage">
+            <text class="tool-icon">🖼</text>
+          </view>
+        </view>
+        <view class="note-actions">
+          <button class="note-btn cancel" bindtap="cancelEdit">返回</button>
+          <button class="save-note-btn {{isSaving ? 'saving' : ''}}" bindtap="saveNote">
+            <text class="save-text">{{isSaving ? '保存中...' : '保存'}}</text>
+            <view class="save-icon" wx:if="{{isSaving}}"></view>
+          </button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 图片预览模态框 -->
+  <view class="image-preview-modal" wx:if="{{isPreviewingImage}}" catchtap="hideImagePreview">
+    <swiper class="preview-swiper" current="{{previewImageIndex}}" bindchange="onPreviewSwiperChange">
+      <swiper-item wx:for="{{currentNote.images}}" wx:key="*this">
+        <image src="{{item}}" mode="aspectFit" class="preview-large-image" bindtap="stopPropagation"></image>
+      </swiper-item>
+    </swiper>
+    <view class="preview-indicator">{{previewImageIndex + 1}}/{{currentNote.images.length}}</view>
+  </view>
+</view> 

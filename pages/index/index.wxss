@@ -1,0 +1,1029 @@
+.page-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #f8f8f8;
+  z-index: 10;
+  padding-bottom: 10rpx;
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.scrollable-content {
+  margin-top: 430rpx; /* 减小固定头部高度 */
+  height: calc(100vh - 430rpx);
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10rpx 20rpx;
+  -webkit-overflow-scrolling: touch;
+}
+
+.total-score-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 40rpx 40rpx 25rpx;
+  max-width: 750rpx;
+  position: relative;
+}
+
+.score-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.team-name {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+  text-align: center;
+}
+
+.score-box {
+  width: 200rpx;
+  height: 200rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  margin: 0 40rpx;
+}
+
+.score-box.total {
+  background: #f8f8f8;
+  border: 2rpx solid #ddd;
+  width: 220rpx;
+  height: 220rpx;
+}
+
+.score-box.small {
+  width: 120rpx;
+  height: 120rpx;
+  margin: 0 15rpx;
+  transition: all 0.2s;
+}
+
+.score-box.small:active {
+  background-color: #f9f9f9;
+}
+
+.score {
+  font-size: 80rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.score-box.total .score {
+  font-size: 90rpx;
+}
+
+.score-box.small .score {
+  font-size: 50rpx;
+}
+
+.vs {
+  font-size: 36rpx;
+  color: #888;
+  font-weight: bold;
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  letter-spacing: 2rpx;
+  z-index: 1;
+}
+
+.vs.small {
+  font-size: 28rpx;
+  position: relative;
+  top: auto;
+  left: auto;
+  transform: none;
+  background-color: transparent;
+  padding: 0;
+  margin: 0 10rpx;
+  color: #999;
+  width: 40rpx;
+  text-align: center;
+}
+
+.daily-scores-container {
+  width: 100%;
+  padding: 20rpx;
+}
+
+.daily-scores-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20rpx 0 5rpx;
+  padding: 0;
+  width: 100%;
+}
+
+.header-text {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  position: relative;
+  padding-bottom: 10rpx;
+}
+
+.header-text::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40rpx;
+  height: 4rpx;
+  background-color: #07c160;
+  border-radius: 2rpx;
+}
+
+.edit-buttons-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 10rpx 0 15rpx;
+  padding: 0 40rpx;
+  gap: 20rpx;
+}
+
+.edit-button {
+  font-size: 28rpx;
+  padding: 15rpx 30rpx;
+  border-radius: 30rpx;
+  margin: 0;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+  min-width: 180rpx;
+  flex: 1;
+  max-width: 300rpx;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-button:active {
+  transform: scale(0.98);
+  box-shadow: 0 1rpx 4rpx rgba(0, 0, 0, 0.1);
+}
+
+.edit-button.loading {
+  background-color: rgba(25, 137, 250, 0.8);
+}
+
+.edit-button.add {
+  background: #07c160;
+  color: #fff;
+}
+
+.edit-button.search {
+  background: #1989fa;
+  color: #fff;
+}
+
+.edit-button.delete {
+  background: #ff4d4f;
+  color: #fff;
+}
+
+.edit-button.note {
+  background-color: #ffd700;
+  margin-left: 0;
+}
+
+.button-text {
+  transition: all 0.2s ease;
+}
+
+.button-loading {
+  width: 20rpx;
+  height: 20rpx;
+  border: 3rpx solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  margin-left: 10rpx;
+  animation: spin 0.8s linear infinite;
+}
+
+.daily-scores-list {
+  padding-top: 20rpx; /* 添加顶部内边距，确保第一项完全显示 */
+  padding-bottom: 60rpx; /* 为底部添加更多空间 */
+  min-height: calc(100vh - 520rpx);
+}
+
+.top-space {
+  height: 20rpx; /* 顶部空白区域高度 */
+}
+
+.daily-score-values {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1;
+}
+
+.daily-score-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25rpx 30rpx;
+  background: #fff;
+  border-radius: 15rpx;
+  margin: 20rpx 0;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.daily-score-item::after {
+  content: '长按可删除';
+  position: absolute;
+  right: 30rpx;
+  bottom: 8rpx;
+  font-size: 20rpx;
+  color: #bbb;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.daily-score-item:active::after {
+  opacity: 1;
+}
+
+.daily-score-item:active {
+  transform: scale(0.98);
+}
+
+.daily-score-item.highlight {
+  background: #e6f7ff;
+  border: 2rpx solid #1989fa;
+  transform: scale(1.02);
+  transition: all 0.3s ease;
+}
+
+.date-text {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #555;
+  width: 200rpx;
+  flex-shrink: 0;
+  padding-left: 10rpx;
+}
+
+.picker-mask, .date-picker-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+}
+
+.picker-container, .date-picker-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  z-index: 101;
+  height: 500rpx;
+}
+
+.picker {
+  width: 100%;
+  height: 100%;
+}
+
+.picker-item {
+  line-height: 88rpx;
+  text-align: center;
+  font-size: 36rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 88rpx;
+}
+
+.picker-view-column {
+  width: 100%;
+}
+
+.date-picker-container {
+  padding: 20rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.date-picker-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20rpx;
+}
+
+.date-picker-content {
+  flex: 1;
+  height: 400rpx;
+}
+
+.date-picker {
+  width: 100%;
+  height: 100%;
+}
+
+.date-picker-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20rpx;
+}
+
+.cancel-button {
+  background: #f5f5f5;
+  color: #333;
+  margin-right: 20rpx;
+  flex: 1;
+}
+
+.confirm-button {
+  flex: 1;
+}
+
+.confirm-button[data-mode="add"] {
+  background: #07c160;
+  color: #fff;
+}
+
+.confirm-button[data-mode="delete"] {
+  background: #ff4d4f;
+  color: #fff;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx 40rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  margin: 20rpx 0;
+  min-height: 200rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999;
+  text-align: center;
+}
+
+.bottom-space {
+  height: 160rpx;
+}
+
+/* 浮动按钮样式 */
+.fab-button {
+  position: fixed;
+  right: 40rpx;
+  bottom: 60rpx;
+  width: 100rpx;
+  height: 100rpx;
+  background: #07c160;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  transition: all 0.2s ease;
+}
+
+.fab-button:active {
+  transform: scale(0.95);
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+}
+
+.fab-button.loading {
+  background-color: rgba(7, 193, 96, 0.8);
+}
+
+.fab-icon {
+  color: #fff;
+  font-size: 60rpx;
+  font-weight: 300;
+  line-height: 1;
+  margin-top: -8rpx;
+  transition: all 0.2s ease;
+}
+
+.fab-loading {
+  width: 40rpx;
+  height: 40rpx;
+  border: 4rpx solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.calendar-modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+}
+
+.calendar-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-height: 90vh;
+  background: #fff;
+  border-radius: 20rpx;
+  z-index: 1001;
+  overflow-y: auto;
+  padding: 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.15);
+}
+
+/* 笔记编辑器样式 */
+.note-editor-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.note-editor-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 650rpx;
+  height: 80vh;
+  background-color: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.note-editor-header {
+  padding: 25rpx 30rpx;
+  border-bottom: 1rpx solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.note-editor-title {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.note-editor-close {
+  font-size: 40rpx;
+  color: #999;
+  padding: 10rpx;
+}
+
+/* 笔记选项卡 */
+.note-tabs {
+  display: flex;
+  border-bottom: 1rpx solid #eee;
+  padding: 0 20rpx;
+}
+
+.note-tab {
+  padding: 20rpx 30rpx;
+  font-size: 28rpx;
+  color: #666;
+  position: relative;
+}
+
+.note-tab.active {
+  color: #ffd700;
+  font-weight: 500;
+}
+
+.note-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 30rpx;
+  right: 30rpx;
+  height: 4rpx;
+  background-color: #ffd700;
+  border-radius: 2rpx;
+}
+
+/* 笔记列表 */
+.notes-list {
+  flex: 1;
+  padding: 20rpx;
+  box-sizing: border-box;
+  overflow-y: auto;
+  position: relative;
+}
+
+.note-card {
+  background-color: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.08);
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.note-card:active {
+  transform: scale(0.98);
+  box-shadow: 0 1rpx 4rpx rgba(0, 0, 0, 0.05);
+  background-color: #fff5f5;
+}
+
+.note-card::after {
+  content: '长按可删除';
+  position: absolute;
+  right: 30rpx;
+  bottom: 8rpx;
+  font-size: 20rpx;
+  color: #bbb;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.note-card:active::after {
+  opacity: 1;
+}
+
+.note-card-content {
+  margin-bottom: 16rpx;
+}
+
+.note-card-title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 10rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.note-card-text {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 16rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.note-card-image {
+  width: 100%;
+  border-radius: 8rpx;
+  margin: 10rpx 0;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.note-card-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 10rpx;
+}
+
+.note-card-time {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 4rpx;
+}
+
+.empty-notes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx 40rpx;
+  color: #999;
+  font-size: 28rpx;
+  text-align: center;
+}
+
+.add-note-btn {
+  position: absolute;
+  right: 30rpx;
+  bottom: 30rpx;
+  width: 80rpx;
+  height: 80rpx;
+  background: #ffd700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  transition: all 0.2s ease;
+}
+
+.add-note-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.15);
+}
+
+.add-icon {
+  color: #fff;
+  font-size: 48rpx;
+  font-weight: 300;
+  line-height: 1;
+  margin-top: -4rpx;
+}
+
+/* 笔记编辑区域 */
+.note-edit-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.note-title-input {
+  border: none;
+  outline: none;
+  font-size: 36rpx;
+  font-weight: 500;
+  padding: 20rpx;
+  margin-bottom: 10rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.note-blocks-container {
+  flex: 1;
+  padding: 20rpx;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.note-block {
+  margin-bottom: 20rpx;
+}
+
+.note-text-block {
+  width: 100%;
+  min-height: 60rpx;
+  padding: 20rpx;
+  font-size: 28rpx;
+  line-height: 1.6;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 12rpx;
+  background-color: #ffffff;
+}
+
+.block-actions {
+  display: flex;
+  justify-content: flex-start;
+  padding: 10rpx 0;
+}
+
+.add-image-btn {
+  display: flex;
+  align-items: center;
+  padding: 12rpx 24rpx;
+  background: #f0f0f0;
+  border-radius: 30rpx;
+  font-size: 24rpx;
+  color: #666;
+  transition: all 0.2s ease;
+}
+
+.add-image-btn:active {
+  transform: scale(0.95);
+  background: #e8e8e8;
+}
+
+.add-image-icon {
+  font-size: 28rpx;
+  margin-right: 8rpx;
+}
+
+.image-block {
+  position: relative;
+  width: 100%;
+  margin: 10rpx 0;
+  border-radius: 12rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.block-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.image-actions {
+  position: absolute;
+  top: 10rpx;
+  right: 10rpx;
+  display: flex;
+  gap: 10rpx;
+}
+
+.delete-image-btn {
+  width: 44rpx;
+  height: 44rpx;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 32rpx;
+  transition: all 0.2s ease;
+}
+
+.delete-image-btn:active {
+  transform: scale(0.9);
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.note-edit-footer {
+  padding: 20rpx 30rpx;
+  border-top: 1rpx solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+}
+
+.note-tools {
+  display: flex;
+  align-items: center;
+  width: 56rpx;
+}
+
+.tool-btn {
+  width: 56rpx;
+  height: 56rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f8f8;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.tool-btn:active {
+  transform: scale(0.9);
+  background: #f0f0f0;
+}
+
+.tool-icon {
+  font-size: 32rpx;
+  line-height: 1;
+}
+
+.note-actions {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  flex: 1;
+  justify-content: flex-end;
+  margin-left: 50rpx;
+  padding-left: 20rpx;
+}
+
+.note-btn {
+  font-size: 28rpx;
+  padding: 12rpx 24rpx;
+  border-radius: 30rpx;
+  border: none;
+  min-width: 180rpx;
+  max-width: 220rpx;
+  text-align: center;
+  flex: 1;
+}
+
+.note-btn.cancel {
+  background-color: #f5f5f5;
+  color: #666;
+}
+
+.save-note-btn {
+  background-color: #ffd700;
+  color: #333;
+  font-size: 28rpx;
+  padding: 12rpx 24rpx;
+  border-radius: 30rpx;
+  border: none;
+  min-width: 180rpx;
+  max-width: 220rpx;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.save-note-btn:active {
+  transform: scale(0.95);
+  background-color: #e6c200;
+}
+
+.save-note-btn.saving {
+  background-color: #e6c200;
+  padding-right: 60rpx;
+}
+
+.save-text {
+  transition: all 0.2s ease;
+}
+
+.save-icon {
+  width: 20rpx;
+  height: 20rpx;
+  border: 3rpx solid #333;
+  border-top-color: transparent;
+  border-radius: 50%;
+  position: absolute;
+  right: 20rpx;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.add-note-btn-fixed {
+  position: absolute;
+  right: 30rpx;
+  bottom: 30rpx;
+  width: 80rpx;
+  height: 80rpx;
+  background: #ffd700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2);
+  z-index: 1010;
+  transition: all 0.2s ease;
+}
+
+.add-note-btn-fixed:active {
+  transform: scale(0.95);
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.15);
+}
+
+/* 图片上传区域样式 */
+.image-upload-area {
+  margin-top: 20rpx;
+  padding: 20rpx 0;
+}
+
+.image-preview-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+}
+
+.image-preview-item {
+  position: relative;
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 12rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.upload-image-btn {
+  width: 200rpx;
+  height: 200rpx;
+  background: #f5f5f5;
+  border-radius: 12rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx dashed #ddd;
+}
+
+.upload-icon {
+  font-size: 48rpx;
+  color: #999;
+  margin-bottom: 10rpx;
+}
+
+.upload-text {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 图片预览模态框样式 */
+.image-preview-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.preview-swiper {
+  width: 100%;
+  height: 100%;
+  z-index: 2001;
+}
+
+.preview-large-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.preview-indicator {
+  position: absolute;
+  bottom: 40rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 10rpx 30rpx;
+  border-radius: 30rpx;
+  font-size: 28rpx;
+  z-index: 2002;
+}
+
+.remaining-images-hint {
+  font-size: 24rpx;
+  color: #666;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 8rpx 16rpx;
+  border-radius: 4rpx;
+  margin-top: -8rpx;
+  margin-bottom: 10rpx;
+  text-align: right;
+} 
