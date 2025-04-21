@@ -43,7 +43,7 @@
   },
   "compileType": "miniprogram",
   "libVersion": "3.8.0",
-  "appid": "wx2b13bdc9e31fdc15",
+  "appid": "YOUR_WECHAT_APP_ID",
   "projectname": "circles",
   "condition": {},
   "editorSetting": {
